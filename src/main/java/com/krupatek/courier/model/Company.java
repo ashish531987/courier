@@ -79,11 +79,11 @@ public class Company {
         this.serviceTax = serviceTax;
     }
 
-    public Integer getFuelSurcharge() {
+    public Double getFuelSurcharge() {
         return fuelSurcharge;
     }
 
-    public void setFuelSurcharge(Integer fuelSurcharge) {
+    public void setFuelSurcharge(Double fuelSurcharge) {
         this.fuelSurcharge = fuelSurcharge;
     }
 
@@ -164,7 +164,7 @@ public class Company {
     private Integer serviceTax;
 
     @Column(name = "fsc")
-    private Integer fuelSurcharge;
+    private Double fuelSurcharge;
 
     @Column(name = "required")
     private String required;

@@ -142,7 +142,7 @@ public class SystemSettingsForm extends Div {
         fuelSurcharge.setValueChangeMode(ValueChangeMode.EAGER);
         binder.bind(fuelSurcharge,
                 c -> c.getFuelSurcharge().toString(),
-                (c, t) -> c.setFuelSurcharge(Integer.valueOf(t)));
+                (c, t) -> c.setFuelSurcharge(Double.valueOf(t)));
 
         formLayout.add(
                 cgst,

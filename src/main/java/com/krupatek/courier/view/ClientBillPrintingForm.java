@@ -716,7 +716,7 @@ public class ClientBillPrintingForm extends Div {
         Integer grossTotal = allByClientNameAndPodDateBetween.parallelStream().map(AccountCopy::getRate).reduce(0, Math::addExact);
         grossTotalTF.setValue(String.format("%.02f", grossTotal.floatValue()));
         long subTotal = (long) (grossTotal +
-                Integer.parseInt(fuelSurcharge.getValue()) * grossTotal / 100.0);
+                Float.parseFloat(fuelSurcharge.getValue()) * grossTotal / 100.0);
         Double netTotal = subTotal +
                 Float.parseFloat(cgst.getValue()) * subTotal / 100.0 +
                 Float.parseFloat(sgst.getValue()) * subTotal / 100.0 +
