@@ -646,7 +646,7 @@ public class ClientBillPrintingForm extends Div {
     private void updateTax(TextField cgst, TextField sgst, TextField igst, TextField fuelSurchage, Company company) {
         if(isGSTEnabled){
 
-            if(isDomestic){
+//            if(isDomestic){
                 // DISABLE IGST
                 igst.setValue("0"); igst.setEnabled(false);
 
@@ -654,14 +654,14 @@ public class ClientBillPrintingForm extends Div {
                 cgst.setEnabled(true); cgst.setValue(String.valueOf(company.getCgst()));
                 sgst.setEnabled(true); sgst.setValue(String.valueOf(company.getSgst()));
 
-            } else {
-                // DISABLE domestic
-                cgst.setValue("0"); cgst.setEnabled(false);
-                sgst.setValue("0"); sgst.setEnabled(false);
-
-                // ENABLE IGST
-                igst.setEnabled(true); igst.setValue(String.valueOf(company.getIgst()));
-            }
+//            } else {
+//                // DISABLE domestic
+//                cgst.setValue("0"); cgst.setEnabled(false);
+//                sgst.setValue("0"); sgst.setEnabled(false);
+//
+//                // ENABLE IGST
+//                igst.setEnabled(true); igst.setValue(String.valueOf(company.getIgst()));
+//            }
         } else {
             // Disable all
             cgst.setValue("0"); cgst.setEnabled(false);
