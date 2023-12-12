@@ -23,8 +23,7 @@ import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.data.provider.ConfigurableFilterDataProvider;
-import com.vaadin.flow.data.provider.DataProvider;
+import com.vaadin.flow.data.provider.CallbackDataProvider;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.server.StreamResource;
 import org.springframework.data.domain.Page;
@@ -145,70 +144,70 @@ public class ClientBillRePrintingForm extends Div {
 
         clientBillGrid.setColumnReorderingAllowed(false);
 
-        DataProvider<BillGeneration, ClientBillFilter> dataProvider =
-                DataProvider.fromFilteringCallbacks(
-                        // First callback fetches items based on a query
-                        query -> {
-                            // The index of the first item to load
-                            int offset = query.getOffset();
+        CallbackDataProvider.FetchCallback<BillGeneration, Void> billGenerationClientBillFilterFetchCallback = query -> {
+            // The index of the first item to load
+            int offset = query.getOffset();
 
-                            // The number of items to load
-                            int limit = query.getLimit();
+            // The number of items to load
+            int limit = query.getLimit();
 
-                            Logger.getLogger(AccountCopyEditor.class.getName()).info("Original offset : "+offset+", limit :"+limit);
+            Logger.getLogger(AccountCopyEditor.class.getName()).info("Original offset : " + offset + ", limit :" + limit);
 
-                            offset = offset/PAGE_SIZE;
-                            limit = Math.min(limit, PAGE_SIZE);
+            offset = offset / PAGE_SIZE;
+            limit = Math.min(limit, PAGE_SIZE);
 
-                            ClientBillFilter clientBillFilter = query.getFilter().orElse(new ClientBillFilter());
-                            String billNoFilter = clientBillFilter.getBillNoFilter();
-                            String invoiceDateFilter = clientBillFilter.getInvoiceDateFilter();
-                            String clientNameFilter = clientBillFilter.getClientNameFilter();
+            String billNoFilter = filter.getBillNoFilter();
+            String invoiceDateFilter = filter.getInvoiceDateFilter();
+            String clientNameFilter = filter.getClientNameFilter();
 
 
-                            Logger.getLogger(AccountCopyEditor.class.getName()).info("Corrected offset : "+offset+", limit :"+limit);
+            Logger.getLogger(AccountCopyEditor.class.getName()).info("Corrected offset : " + offset + ", limit :" + limit);
 
-                            Page<BillGeneration> accountCopies = billingService
-                                    .findByAndBillNoStartsWithAndBillDateContainingAndClientNameStartsWith(offset, limit, billNoFilter, invoiceDateFilter, clientNameFilter);
-                            Logger.getLogger(AccountCopyEditor.class.getName()).info("Total pages : "+accountCopies.getTotalElements());
-                            return accountCopies.stream();
-                        },
-                        // Second callback fetches the number of items
-                        // for a query
-                        query -> {
-                            ClientBillFilter clientBillFilter = query.getFilter().orElse(new ClientBillFilter());
-                            String billNoFilter = clientBillFilter.getBillNoFilter();
-                            String invoiceDateFilter = clientBillFilter.getInvoiceDateFilter();
-                            String clientNameFilter = clientBillFilter.getClientNameFilter();
-                            return Math.toIntExact(billingService.countByBillNoStartsWithAndBillDateContainingAndClientNameStartsWith(billNoFilter, invoiceDateFilter,clientNameFilter));
-                        });
-
+            Page<BillGeneration> accountCopies = billingService
+                    .findByAndBillNoStartsWithAndBillDateContainingAndClientNameStartsWith(offset, limit, billNoFilter, invoiceDateFilter, clientNameFilter);
+            Logger.getLogger(AccountCopyEditor.class.getName()).info("Total pages : " + accountCopies.getTotalElements());
+            return accountCopies.stream();
+        };
+//        DataProvider<BillGeneration, ClientBillFilter> dataProvider =
+//                DataProvider.fromFilteringCallbacks(
+//                        // First callback fetches items based on a query
+//                        billGenerationClientBillFilterFetchCallback,
+//                        // Second callback fetches the number of items
+//                        // for a query
+//                        query -> {
+//                            ClientBillFilter clientBillFilter = query.getFilter().orElse(new ClientBillFilter());
+//                            String billNoFilter = clientBillFilter.getBillNoFilter();
+//                            String invoiceDateFilter = clientBillFilter.getInvoiceDateFilter();
+//                            String clientNameFilter = clientBillFilter.getClientNameFilter();
+//                            return Math.toIntExact(billingService.countByBillNoStartsWithAndBillDateContainingAndClientNameStartsWith(billNoFilter, invoiceDateFilter,clientNameFilter));
+//                        });
+//
         filter = new ClientBillFilter();
-        ConfigurableFilterDataProvider<BillGeneration, Void, ClientBillFilter> wrapper =
-                dataProvider.withConfigurableFilter();
-        wrapper.setFilter(filter);
-        clientBillGrid.setDataProvider(wrapper);
-
+//        ConfigurableFilterDataProvider<BillGeneration, Void, ClientBillFilter> wrapper =
+//                dataProvider.withConfigurableFilter();
+//        wrapper.setFilter(filter);
+//        clientBillGrid.setDataProvider(wrapper);
+        clientBillGrid.setItems(billGenerationClientBillFilterFetchCallback);
         billNo.addValueChangeListener(event -> {
             filter.setBillNoFilter(event.getValue());
-            wrapper.setFilter(filter);
+            clientBillGrid.setItems(billGenerationClientBillFilterFetchCallback);
 //            wrapper.refreshAll();
         });
 
         billDate.addValueChangeListener(event -> {
             try {
                 filter.setInvoiceDateFilter(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new SimpleDateFormat("dd/MM/yy").parse(event.getValue())));
-                wrapper.setFilter(filter);
+                clientBillGrid.setItems(billGenerationClientBillFilterFetchCallback);
             } catch (ParseException e) {
                 filter.setInvoiceDateFilter(event.getValue());
-                wrapper.setFilter(filter);
+                clientBillGrid.setItems(billGenerationClientBillFilterFetchCallback);
             }
 //            wrapper.refreshAll();
         });
 
         clientName.addValueChangeListener(event -> {
             filter.setClientNameFilter(event.getValue());
-            wrapper.setFilter(filter);
+            clientBillGrid.setItems(billGenerationClientBillFilterFetchCallback);
 //            wrapper.refreshAll();
         });
         verticalLayout.add(title ,clientBillGrid);

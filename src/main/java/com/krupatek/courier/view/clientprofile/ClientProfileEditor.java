@@ -13,8 +13,7 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.data.provider.ConfigurableFilterDataProvider;
-import com.vaadin.flow.data.provider.DataProvider;
+import com.vaadin.flow.data.provider.CallbackDataProvider;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import org.springframework.data.domain.Page;
 
@@ -23,7 +22,7 @@ import java.util.logging.Logger;
 public class ClientProfileEditor extends Div {
 
     private final int PAGE_SIZE = 500;
-    private String clientNameFilter;
+    private String clientNameFilter = "";
     public  ClientProfileEditor(ClientService clientService){
         VerticalLayout verticalLayout = new VerticalLayout();
         verticalLayout.setMargin(false);
@@ -55,60 +54,84 @@ public class ClientProfileEditor extends Div {
 
         clientGrid.setColumnReorderingAllowed(false);
 
-        DataProvider<Client, String> dataProvider =
-                DataProvider.fromFilteringCallbacks(
-                        // First callback fetches items based on a query
-                        query -> {
-                            // The index of the first item to load
-                            int offset = query.getOffset();
+//        DataProvider<Client, String> dataProvider =
+//                DataProvider.fromFilteringCallbacks(
+//                        // First callback fetches items based on a query
+//                        query -> {
+//                            // The index of the first item to load
+//                            int offset = query.getOffset();
+//
+//                            // The number of items to load
+//                            int limit = query.getLimit();
+//
+//                            Logger.getLogger(ClientProfileEditor.class.getName()).info("offset : "+offset+", limit :"+limit);
+//
+//                            offset = offset/PAGE_SIZE;
+//                            limit = PAGE_SIZE;
+//
+//                            Logger.getLogger(AccountCopyEditor.class.getName()).info("Corrected offset : " + offset + ", limit :" + limit);
+//
+//                            String clientNameFilter = query.getFilter().orElse("");
+//
+//                            Logger.getLogger(ClientProfileEditor.class.getName()).info("Filter is "+clientNameFilter);
+//
+//                            Page<Client> accountCopies = clientService
+//                                    .findByClientNameStartsWithOrderByClientName(offset, limit, clientNameFilter);
+//                            Logger.getLogger(ClientProfileEditor.class.getName()).info("pages: "+accountCopies.getNumber());
+//                            Logger.getLogger(ClientProfileEditor.class.getName()).info("numberOfElements : "+accountCopies.getNumberOfElements());
+//                            Logger.getLogger(ClientProfileEditor.class.getName()).info("size : "+accountCopies.getSize());
+//                            Logger.getLogger(ClientProfileEditor.class.getName()).info("totalElements : "+accountCopies.getTotalElements());
+//                            Logger.getLogger(ClientProfileEditor.class.getName()).info("totalPages : "+accountCopies.getTotalPages());
+//                            return accountCopies.stream();
+//                        },
+//                        // Second callback fetches the number of items
+//                        // for a query
+//                        query -> {
+//                            // The index of the first item to load
+//                            int offset = query.getOffset();
+//
+//                            // The number of items to load
+//                            int limit = query.getLimit();
+//
+//                            String clientNameFilter = query.getFilter().orElse("");
+//
+//                            return Math.toIntExact(clientService.countByClientNameStartsWith(clientNameFilter));
+//                        });
+//
+//        ConfigurableFilterDataProvider<Client, Void, String> wrapper =
+//                dataProvider.withConfigurableFilter();
+//        wrapper.setFilter(clientNameFilter);
+//        clientGrid.setItems(wrapper);
 
-                            // The number of items to load
-                            int limit = query.getLimit();
+        CallbackDataProvider.FetchCallback<Client, Void> clientVoidFetchCallback = query -> {
+                // The index of the first item to load
+                int offset = query.getOffset();
 
-                            Logger.getLogger(ClientProfileEditor.class.getName()).info("offset : "+offset+", limit :"+limit);
+                // The number of items to load
+                int limit = query.getLimit();
 
-                            offset = offset/PAGE_SIZE;
-                            limit = PAGE_SIZE;
+                Logger.getLogger(ClientProfileEditor.class.getName()).info("offset : "+offset+", limit :"+limit);
 
-                            Logger.getLogger(AccountCopyEditor.class.getName()).info("Corrected offset : " + offset + ", limit :" + limit);
+                offset = offset/PAGE_SIZE;
+                limit = PAGE_SIZE;
 
-                            String clientNameFilter = query.getFilter().orElse("");
+                Logger.getLogger(AccountCopyEditor.class.getName()).info("Corrected offset : " + offset + ", limit :" + limit);
 
-                            Logger.getLogger(ClientProfileEditor.class.getName()).info("Filter is "+clientNameFilter);
+                Logger.getLogger(ClientProfileEditor.class.getName()).info("Filter is "+clientNameFilter);
 
-                            Page<Client> accountCopies = clientService
-                                    .findByClientNameStartsWithOrderByClientName(offset, limit, clientNameFilter);
-                            Logger.getLogger(ClientProfileEditor.class.getName()).info("pages: "+accountCopies.getNumber());
-                            Logger.getLogger(ClientProfileEditor.class.getName()).info("numberOfElements : "+accountCopies.getNumberOfElements());
-                            Logger.getLogger(ClientProfileEditor.class.getName()).info("size : "+accountCopies.getSize());
-                            Logger.getLogger(ClientProfileEditor.class.getName()).info("totalElements : "+accountCopies.getTotalElements());
-                            Logger.getLogger(ClientProfileEditor.class.getName()).info("totalPages : "+accountCopies.getTotalPages());
-                            return accountCopies.stream();
-                        },
-                        // Second callback fetches the number of items
-                        // for a query
-                        query -> {
-                            // The index of the first item to load
-                            int offset = query.getOffset();
-
-                            // The number of items to load
-                            int limit = query.getLimit();
-
-                            String clientNameFilter = query.getFilter().orElse("");
-
-                            return Math.toIntExact(clientService.countByClientNameStartsWith(clientNameFilter));
-                        });
-
-        ConfigurableFilterDataProvider<Client, Void, String> wrapper =
-                dataProvider.withConfigurableFilter();
-        wrapper.setFilter(clientNameFilter);
-        clientGrid.setDataProvider(wrapper);
-
+                Page<Client> accountCopies = clientService
+                        .findByClientNameStartsWithOrderByClientName(offset, limit, clientNameFilter);
+                Logger.getLogger(ClientProfileEditor.class.getName()).info("pages: "+accountCopies.getNumber());
+                Logger.getLogger(ClientProfileEditor.class.getName()).info("numberOfElements : "+accountCopies.getNumberOfElements());
+                Logger.getLogger(ClientProfileEditor.class.getName()).info("size : "+accountCopies.getSize());
+                Logger.getLogger(ClientProfileEditor.class.getName()).info("totalElements : "+accountCopies.getTotalElements());
+                Logger.getLogger(ClientProfileEditor.class.getName()).info("totalPages : "+accountCopies.getTotalPages());
+                return accountCopies.stream();
+        };
+        clientGrid.setItems(clientVoidFetchCallback);
         clientName.addValueChangeListener(event -> {
             clientNameFilter = event.getValue();
-            wrapper.setFilter(clientNameFilter);
-//            clientNameFilter = event.getValue();
-//            wrapper.refreshAll();
+            clientGrid.setItems(clientVoidFetchCallback);
         });
 
 
@@ -128,7 +151,7 @@ public class ClientProfileEditor extends Div {
         refreshBtn.setWidth("12.5%");
         refreshBtn.addClickListener( e -> {
             clientNameFilter = "";
-            wrapper.setFilter(clientNameFilter);
+            clientGrid.setItems(clientVoidFetchCallback);
         });
 
         HorizontalLayout actions = new HorizontalLayout();

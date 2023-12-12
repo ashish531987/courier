@@ -1,22 +1,21 @@
 package com.krupatek.courier;
 
-import com.krupatek.courier.model.BillGeneration;
-import com.krupatek.courier.service.BillingService;
+import com.vaadin.flow.component.page.AppShellConfigurator;
+import com.vaadin.flow.server.PWA;
+import com.vaadin.flow.theme.Theme;
+import com.vaadin.flow.theme.lumo.Lumo;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
-import org.springframework.data.domain.Page;
-
-import javax.annotation.PostConstruct;
 
 /**
  * The entry point of the Spring Boot application.
  */
 @SpringBootApplication
-public class Application extends SpringBootServletInitializer {
+@PWA(name = "Horizon Courier", shortName = "Hz-Cr")
+@Theme(themeClass = Lumo.class, variant = Lumo.LIGHT)
+public class Application implements AppShellConfigurator {
 
     Logger log = LogManager.getLogger(Application.class);
 
