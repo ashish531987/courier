@@ -1,6 +1,7 @@
 package com.krupatek.courier;
 
 import com.krupatek.courier.model.AccountCopy;
+import com.krupatek.courier.model.PlaceGeneration;
 import com.krupatek.courier.repository.CompanyRepository;
 import com.krupatek.courier.repository.CountryRepository;
 import com.krupatek.courier.repository.PlaceGenerationRepository;
@@ -15,6 +16,7 @@ import com.krupatek.courier.view.SystemSettingsForm;
 import com.krupatek.courier.view.accountcopy.AccountCopyEditor;
 import com.krupatek.courier.view.accountcopy.AccountCopyForm;
 import com.krupatek.courier.view.clientprofile.ClientProfileEditor;
+import com.krupatek.courier.view.placegeneration.PlaceGenerationEditor;
 import com.krupatek.courier.view.pod.PODEntryForm;
 import com.krupatek.courier.view.rate.*;
 import com.vaadin.flow.component.Component;
@@ -143,12 +145,17 @@ public class MainView extends VerticalLayout {
             component.add(new RateEntryEditor(clientService, courierService, zonesService, rateMasterService));
         });
 
+//        rateMaster.getSubMenu().addItem(getMenuItemComponent(null, "Place Generation"), e -> {
+//            component.removeAll();
+//            component.add(new PlaceGenerationForm(zonesService, placeGenerationService, stateService, new PlaceGeneration()));
+//
+//        });
+
         rateMaster.getSubMenu().addItem(getMenuItemComponent(null, "Place Generation"), e -> {
             component.removeAll();
-            component.add(new PlaceGenerationForm(zonesService, placeGenerationService, stateService));
+            component.add(new PlaceGenerationEditor(zonesService, placeGenerationService, stateService));
 
         });
-
 
 
         Component intRateMasterMenu = getMenuItemComponent(VaadinIcon.DOLLAR, "International Rate Master");

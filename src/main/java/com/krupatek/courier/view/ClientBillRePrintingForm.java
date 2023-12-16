@@ -95,8 +95,6 @@ public class ClientBillRePrintingForm extends Div {
             Dialog confirmDialog = new Dialog();
             confirmDialog.setCloseOnEsc(false);
             confirmDialog.setCloseOnOutsideClick(false);
-            confirmDialog.setWidth("400px");
-            confirmDialog.setHeight("150px");
 
             VerticalLayout containerLayout = new VerticalLayout();
 
@@ -119,6 +117,8 @@ public class ClientBillRePrintingForm extends Div {
             buttonLayout.add(cancelBtn, emptyLbl, deleteBtn);
 
             containerLayout.add(buttonLayout);
+            containerLayout.setWidth("400px");
+            containerLayout.setHeight("150px");
 
             confirmDialog.add(containerLayout);
 

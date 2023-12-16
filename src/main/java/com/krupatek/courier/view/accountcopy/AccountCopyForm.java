@@ -405,10 +405,10 @@ public class AccountCopyForm extends Div {
                 Dialog confirmDialog = new Dialog();
                 confirmDialog.setCloseOnEsc(false);
                 confirmDialog.setCloseOnOutsideClick(false);
-                confirmDialog.setWidth("400px");
-                confirmDialog.setHeight("150px");
 
                 VerticalLayout containerLayout = new VerticalLayout();
+                containerLayout.setWidth("400px");
+                containerLayout.setHeight("150px");
 
                 H5 confirmDelete = new H5("Confirm delete");
                 containerLayout.add(confirmDelete);

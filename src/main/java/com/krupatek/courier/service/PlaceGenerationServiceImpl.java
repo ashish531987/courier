@@ -3,6 +3,9 @@ package com.krupatek.courier.service;
 import com.krupatek.courier.model.PlaceGeneration;
 import com.krupatek.courier.repository.PlaceGenerationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +22,12 @@ public class PlaceGenerationServiceImpl implements PlaceGenerationService {
     @Override
     public Optional<PlaceGeneration> findByCityName(String cityName) {
         return placeGenerationRepository.findByCityName(cityName);
+    }
+
+    @Override
+    public Page<PlaceGeneration> findByCityNameStartsWithOrderByCityName(int offset, int limit, String cityName) {
+        Pageable pageable = PageRequest.of(offset, limit);
+        return placeGenerationRepository.findByCityNameStartsWithOrderByCityName(cityName, pageable);
     }
 
     @Override
@@ -51,5 +60,10 @@ public class PlaceGenerationServiceImpl implements PlaceGenerationService {
     @Override
     public long nextPlaceId(){
         return placeGenerationRepository.findMaxPlaceId()+1;
+    }
+
+    @Override
+    public void delete(PlaceGeneration placeGeneration) {
+        placeGenerationRepository.delete(placeGeneration);
     }
 }
