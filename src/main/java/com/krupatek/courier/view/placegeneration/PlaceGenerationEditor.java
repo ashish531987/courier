@@ -6,7 +6,6 @@ import com.krupatek.courier.service.PlaceGenerationService;
 import com.krupatek.courier.service.StateService;
 import com.krupatek.courier.service.ZonesService;
 import com.krupatek.courier.view.accountcopy.AccountCopyEditor;
-import com.krupatek.courier.view.clientprofile.ClientProfileEditor;
 import com.krupatek.courier.view.rate.PlaceGenerationForm;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
@@ -38,10 +37,10 @@ public class PlaceGenerationEditor extends Div {
 
         H4 title = new H4();
         title.setSizeFull();
-        title.setText("Edit Client Profile");
+        title.setText("Edit Places");
 
         TextField clientName = new TextField();
-        clientName.setPlaceholder("Filter by Client Name");
+        clientName.setPlaceholder("Filter by Place Name");
         clientName.setValueChangeMode(ValueChangeMode.LAZY);
         clientName.setValueChangeTimeout(Constants.TEXT_FIELD_TIMEOUT);
 
@@ -71,15 +70,15 @@ public class PlaceGenerationEditor extends Div {
 
             Logger.getLogger(AccountCopyEditor.class.getName()).info("Corrected offset : " + offset + ", limit :" + limit);
 
-            Logger.getLogger(ClientProfileEditor.class.getName()).info("Filter is "+placeNameFilter);
+            Logger.getLogger(PlaceGenerationEditor.class.getName()).info("Filter is "+placeNameFilter);
 
             Page<PlaceGeneration> placeGenerations = placeGenerationService
                     .findByCityNameStartsWithOrderByCityName(offset, limit, placeNameFilter);
-            Logger.getLogger(ClientProfileEditor.class.getName()).info("pages: "+placeGenerations.getNumber());
-            Logger.getLogger(ClientProfileEditor.class.getName()).info("numberOfElements : "+placeGenerations.getNumberOfElements());
-            Logger.getLogger(ClientProfileEditor.class.getName()).info("size : "+placeGenerations.getSize());
-            Logger.getLogger(ClientProfileEditor.class.getName()).info("totalElements : "+placeGenerations.getTotalElements());
-            Logger.getLogger(ClientProfileEditor.class.getName()).info("totalPages : "+placeGenerations.getTotalPages());
+            Logger.getLogger(PlaceGenerationEditor.class.getName()).info("pages: "+placeGenerations.getNumber());
+            Logger.getLogger(PlaceGenerationEditor.class.getName()).info("numberOfElements : "+placeGenerations.getNumberOfElements());
+            Logger.getLogger(PlaceGenerationEditor.class.getName()).info("size : "+placeGenerations.getSize());
+            Logger.getLogger(PlaceGenerationEditor.class.getName()).info("totalElements : "+placeGenerations.getTotalElements());
+            Logger.getLogger(PlaceGenerationEditor.class.getName()).info("totalPages : "+placeGenerations.getTotalPages());
             return placeGenerations.stream();
         };
         placeGenerationGrid.setItems(placeGenerationVoidFetchCallback);
@@ -98,7 +97,7 @@ public class PlaceGenerationEditor extends Div {
             add(placeGenerationForm);
         });
 
-        Button addNewBtn = new Button("New Client", VaadinIcon.PLUS.create());
+        Button addNewBtn = new Button("New Place", VaadinIcon.PLUS.create());
         addNewBtn.setWidth("12.5%");
         addNewBtn.addClickListener(e -> add(new PlaceGenerationForm(zonesService,
                 placeGenerationService,
